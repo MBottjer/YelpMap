@@ -12,6 +12,7 @@
 
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 	<script src="http://rawgit.com/lvoogdt/Leaflet.awesome-markers/2.0/develop/dist/leaflet.awesome-markers.js"></script>
+	<script src="http://rawgit.com/mourner/rbush/master/rbush.js"></script>
 	<script src="data/yelp_academic_100_business.js"></script>
 	<script>
 		var map = L.map('map', {
@@ -31,21 +32,26 @@
 		// L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}').addTo(map);
 
 		var latitudes = [], longitudes = [];
+		var tree = rbush();
 
 		yelpData.forEach(function (data) {
 			latitudes.push(data.latitude);
 			longitudes.push(data.longitude);
 
-			L.marker([data.latitude, data.longitude], {
+			var pointMarker = L.marker([data.latitude, data.longitude], {
   				icon: L.AwesomeMarkers.icon({
   					// prefix: 'fa',
   					// icon: noiseLevelIconClass[data.attributes["Noise Level"]],
   					markerColor: 'red'
   				})
-  			}).addTo(map);
+			});
+
+			var point = [ data.latitude, data.longitude, data.latitude, data.longitude, { marker: pointMarker } ];
+
+			tree.insert(point);
 		});
 
-		var maxLat = Math.max.apply(Math, latitudes),
+		/*var maxLat = Math.max.apply(Math, latitudes),
 				minLat = Math.min.apply(Math, latitudes),
 
 				maxLong = Math.max.apply(Math, longitudes),
@@ -54,7 +60,23 @@
 		map.fitBounds([
 			[maxLat, maxLong],
 			[minLat, minLong]
-		]);
+		]);*/
+
+		var markers;
+
+		map.on('moveend', function (evt) {
+				var bounds = map.getBounds(),
+						activePoints = tree.search([bounds._southWest.lat, bounds._southWest.lng,  bounds._northEast.lat, bounds._northEast.lng]);
+
+			markers && map.removeLayer(markers);
+			markers = new L.FeatureGroup();
+
+			activePoints.forEach(function (point) {
+					point[4].marker.addTo(markers);
+			});
+
+			markers.addTo(map);
+		});
 	</script>
 </body>
 </html>
