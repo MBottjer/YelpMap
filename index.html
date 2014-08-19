@@ -1,26 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="application.css" />
-
+	<link rel="stylesheet" href="css/application.css" />
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script src="yelp_academic_100_business.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="http://rawgit.com/lvoogdt/Leaflet.awesome-markers/2.0/develop/dist/leaflet.awesome-markers.css" />
 </head>
 <body>
 	<div id="map">
-	</div> 
+	</div>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script src="http://rawgit.com/lvoogdt/Leaflet.awesome-markers/2.0/develop/dist/leaflet.awesome-markers.js"></script>
+	<script src="data/yelp_academic_100_business.js"></script>
 	<script>
 		var map = L.map('map', {
 			center: [ yelpData[0].latitude, yelpData[0].longitude ],
 			zoom:5
 		});
 
-		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
+		var noiseLevelIconClass = {
+			'quiet': 'volume-off',
+			'average': 'volume-down',
+			'loud': 'volume-up',
+			'very_loud': 'volume-up',
+			undefined: 'info'
+		}
+
+		L.tileLayer('http://{s}.tiles.mapbox.com/v3/livingston.j9a1923b/{z}/{x}/{y}.png').addTo(map);
+		// L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}').addTo(map);
+
+		var latitudes = [], longitudes = [];
 
 		yelpData.forEach(function (data) {
-    		L.marker([data.latitude, data.longitude]).addTo(map);
+			latitudes.push(data.latitude);
+			longitudes.push(data.longitude);
+
+			L.marker([data.latitude, data.longitude], {
+  				icon: L.AwesomeMarkers.icon({
+  					// prefix: 'fa',
+  					// icon: noiseLevelIconClass[data.attributes["Noise Level"]],
+  					markerColor: 'red'
+  				})
+  			}).addTo(map);
 		});
+
+		var maxLat = Math.max.apply(Math, latitudes),
+				minLat = Math.min.apply(Math, latitudes),
+
+				maxLong = Math.max.apply(Math, longitudes),
+				minLong = Math.min.apply(Math, longitudes);
+
+		map.fitBounds([
+			[maxLat, maxLong],
+			[minLat, minLong]
+		]);
 	</script>
 </body>
 </html>
