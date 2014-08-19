@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="application.css" />
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script src="yelp_academic_100_business.js"></script>
+</head>
+<body>
+	<div id="map">
+	</div> 
+	<script>
+		var map = L.map('map', {
+			center: [ yelpData[0].latitude, yelpData[0].longitude ],
+			zoom:5
+		});
+
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
+
+		yelpData.forEach(function (data) {
+    		L.marker([data.latitude, data.longitude]).addTo(map);
+		});
+	</script>
+</body>
+</html>
