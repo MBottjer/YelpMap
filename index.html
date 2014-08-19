@@ -40,8 +40,8 @@
 
 			var pointMarker = L.marker([data.latitude, data.longitude], {
   				icon: L.AwesomeMarkers.icon({
-  					// prefix: 'fa',
-  					// icon: noiseLevelIconClass[data.attributes["Noise Level"]],
+  					prefix: 'fa',
+  					icon: noiseLevelIconClass[data.attributes["Noise Level"]],
   					markerColor: 'red'
   				})
 			});
@@ -51,7 +51,7 @@
 			tree.insert(point);
 		});
 
-		/*var maxLat = Math.max.apply(Math, latitudes),
+		var maxLat = Math.max.apply(Math, latitudes),
 				minLat = Math.min.apply(Math, latitudes),
 
 				maxLong = Math.max.apply(Math, longitudes),
@@ -60,7 +60,7 @@
 		map.fitBounds([
 			[maxLat, maxLong],
 			[minLat, minLong]
-		]);*/
+		]);
 
 		var markers;
 
