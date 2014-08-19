@@ -64,9 +64,9 @@
 
 		var markers;
 
-		map.on('moveend', function (evt) {
-				var bounds = map.getBounds(),
-						activePoints = tree.search([bounds._southWest.lat, bounds._southWest.lng,  bounds._northEast.lat, bounds._northEast.lng]);
+		var renderPoints = function (evt) {
+			var bounds = map.getBounds(),
+					activePoints = tree.search([bounds._southWest.lat, bounds._southWest.lng,  bounds._northEast.lat, bounds._northEast.lng]);
 
 			markers && map.removeLayer(markers);
 			markers = new L.FeatureGroup();
@@ -76,7 +76,11 @@
 			});
 
 			markers.addTo(map);
-		});
+		};
+
+		map.on('moveend', renderPoints);
+
+		renderPoints();
 	</script>
 </body>
 </html>
