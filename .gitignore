@@ -1,3 +1,16 @@
 *.json
 yelp_academic_dataset_business.json
 .DS_Store
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+/public/assets/
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
