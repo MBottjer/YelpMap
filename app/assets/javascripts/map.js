@@ -1,4 +1,4 @@
-
+$.getJSON('/map/data/', function (yelpData) {
 	var map = L.map('map', {
 		center: [ yelpData[0].latitude, yelpData[0].longitude ],
 		zoom:5
@@ -48,3 +48,4 @@
 	};
 	map.on('moveend', renderPoints);
 	renderPoints()
+});
